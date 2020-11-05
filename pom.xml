@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>no.ssb.dapla.secrets</groupId>
-    <artifactId>dapla-secret-manager-provider-google-secret-manager-rest-api</artifactId>
+    <artifactId>dapla-secret-manager-provider-google-rest-api</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Dapla Secrets Provider Google Secret Manager REST API</name>
-    <description>Dapla Secrets Provider Google Secret Manager REST API</description>
+    <name>Dapla Secrets Provider Google REST API</name>
+    <description>Dapla Secrets Provider Google REST API</description>
     <url>https://github.com/statisticsnorway/</url>
     <inceptionYear>2020</inceptionYear>
 
@@ -38,10 +38,10 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/statisticsnorway/dapla-secret-manager-provider-google-secret-manager-rest-api.git</connection>
-        <developerConnection>scm:git:git@github.com:statisticsnorway/dapla-secret-manager-provider-google-secret-manager-rest-api.git
+        <connection>scm:git:git://github.com/statisticsnorway/dapla-secret-manager-provider-google-rest-api.git</connection>
+        <developerConnection>scm:git:git@github.com:statisticsnorway/dapla-secret-manager-provider-google-rest-api.git
         </developerConnection>
-        <url>https://github.com/statisticsnorway/dapla-secret-manager-provider-google-secret-manager-rest-api/tree/master</url>
+        <url>https://github.com/statisticsnorway/dapla-secret-manager-provider-google-rest-api/tree/master</url>
         <tag>HEAD</tag>
     </scm>
 
