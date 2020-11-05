@@ -22,10 +22,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class GoogleSecretManagerClient implements SecretManagerClient {
 
     static final ObjectMapper mapper = new ObjectMapper();
-
     private final String projectId;
-    private final AtomicBoolean closed = new AtomicBoolean(false);
+    private final HttpClient client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
     private final AccessToken accessToken;
+    private final AtomicBoolean closed = new AtomicBoolean(false);
 
     // uses compute-engine
     public GoogleSecretManagerClient(String projectId) {
@@ -70,10 +70,6 @@ public class GoogleSecretManagerClient implements SecretManagerClient {
                     .header("Authorization", accessToken)
                     .header("Content-Type", "application/json")
                     .GET()
-                    .build();
-
-            HttpClient client = HttpClient.newBuilder()
-                    .version(HttpClient.Version.HTTP_1_1)
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -124,14 +120,11 @@ public class GoogleSecretManagerClient implements SecretManagerClient {
         if (closed.get()) {
             throw new RuntimeException("Client is closed!");
         }
-        byte[] secretValue = doRequestAccessSecret(secretName, secretVersion);
-        return secretValue;
+        return doRequestAccessSecret(secretName, secretVersion);
     }
 
     @Override
     public void close() {
-        if (closed.compareAndSet(false, true)) {
-            // do nothing
-        }
+        closed.compareAndSet(false, true);
     }
 }
