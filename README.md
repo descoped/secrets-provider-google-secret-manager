@@ -1,0 +1,1 @@
+# dapla-secret-manager-provider-google-secret-manager-rest-api
