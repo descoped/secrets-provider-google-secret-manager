@@ -56,6 +56,18 @@
             <groupId>com.google.auth</groupId>
             <artifactId>google-auth-library-oauth2-http</artifactId>
             <version>0.17.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>jsr305</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>no.ssb.jpms</groupId>
+            <artifactId>jsr305-and-javax.annotation-api</artifactId>
+            <version>1.2</version>
         </dependency>
 
         <dependency>
