@@ -2,6 +2,7 @@ package no.ssb.dapla.secrets.google.secretmanager.restapi;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.auth.oauth2.AccessToken;
 import com.google.auth.oauth2.ComputeEngineCredentials;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -10,6 +11,7 @@ import no.ssb.dapla.secrets.api.SecretManagerClient;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -59,7 +61,11 @@ public class GoogleSecretManagerClient implements SecretManagerClient {
         }
     }
 
-    byte[] doRequestAccessSecret(String secretName, String secretVersion) {
+    @Override
+    public byte[] readBytes(String secretName, String secretVersion) {
+        if (closed.get()) {
+            throw new RuntimeException("Client is closed!");
+        }
         try {
             String accessToken = String.format("Bearer %s", this.accessToken.getTokenValue());
             URI uri = URI.create(String.format("https://secretmanager.googleapis.com/v1/projects/%s/secrets/%s/versions/%s:access",
@@ -97,30 +103,84 @@ public class GoogleSecretManagerClient implements SecretManagerClient {
     }
 
     @Override
-    public String readString(String secretName) {
-        return readString(secretName, null);
-    }
-
-    @Override
-    public String readString(String secretName, String secretVersion) {
+    public String addVersion(String secretName, byte[] secretValue) {
         if (closed.get()) {
             throw new RuntimeException("Client is closed!");
         }
-        byte[] secretValue = doRequestAccessSecret(secretName, secretVersion);
-        return new String(secretValue, StandardCharsets.UTF_8);
-    }
+        try {
+            HttpResponse<String> checkSecretResponse;
+            {
+                String accessToken = String.format("Bearer %s", this.accessToken.getTokenValue());
+                URI uri = URI.create(String.format("https://secretmanager.googleapis.com/v1/projects/%s/secrets/%s",
+                        projectId, secretName));
 
-    @Override
-    public byte[] readBytes(String secretName) {
-        return readBytes(secretName, null);
-    }
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(uri)
+                        .header("Authorization", accessToken)
+                        .GET()
+                        .build();
 
-    @Override
-    public byte[] readBytes(String secretName, String secretVersion) {
-        if (closed.get()) {
-            throw new RuntimeException("Client is closed!");
+                checkSecretResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
+            }
+            if (checkSecretResponse.statusCode() == 200) {
+                // already exists, do nothing
+            } else if (checkSecretResponse.statusCode() == 404) {
+                ObjectNode secret = mapper.createObjectNode();
+                ObjectNode replication = secret.putObject("replication");
+                ObjectNode automatic = replication.putObject("automatic");
+                ObjectNode customerManagedEncryption = automatic.putObject("customerManagedEncryption");
+                customerManagedEncryption.put("kmsKeyName", "global");
+
+                String accessToken = String.format("Bearer %s", this.accessToken.getTokenValue());
+                URI uri = URI.create(String.format("https://secretmanager.googleapis.com/v1/projects/%s/secrets?secretId=%s",
+                        URLEncoder.encode(projectId, StandardCharsets.UTF_8),
+                        URLEncoder.encode(secretName, StandardCharsets.UTF_8)
+                ));
+
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(uri)
+                        .header("Authorization", accessToken)
+                        .header("Content-Type", "application/json")
+                        .POST(HttpRequest.BodyPublishers.ofString(secret.toString()))
+                        .build();
+
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() != 200) {
+                    throw new RuntimeException(String.format("Error (%s) creating secret '%s' cause %s", response.statusCode(), secretName, response.body()));
+                }
+            } else {
+                throw new RuntimeException(String.format("Error (%s) checking secret '%s' cause %s", checkSecretResponse.statusCode(), secretName, checkSecretResponse.body()));
+            }
+            {
+                ObjectNode secretVersion = mapper.createObjectNode();
+                ObjectNode payload = secretVersion.putObject("payload");
+                payload.put("data", secretValue);
+
+                String accessToken = String.format("Bearer %s", this.accessToken.getTokenValue());
+                URI uri = URI.create(String.format("https://secretmanager.googleapis.com/v1/projects/%s/secrets/%s:addVersion",
+                        URLEncoder.encode(projectId, StandardCharsets.UTF_8),
+                        URLEncoder.encode(secretName, StandardCharsets.UTF_8)
+                ));
+
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(uri)
+                        .header("Authorization", accessToken)
+                        .header("Content-Type", "application/json")
+                        .POST(HttpRequest.BodyPublishers.ofString(secretVersion.toString()))
+                        .build();
+
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() != 200) {
+                    throw new RuntimeException(String.format("Error (%s) creating secret '%s' cause %s", response.statusCode(), secretName, response.body()));
+                }
+
+                JsonNode responseSecretVersion = mapper.readTree(response.body());
+                String version = responseSecretVersion.get("name").textValue();
+                return version;
+            }
+        } catch (InterruptedException | IOException e) {
+            throw new RuntimeException(e);
         }
-        return doRequestAccessSecret(secretName, secretVersion);
     }
 
     @Override
