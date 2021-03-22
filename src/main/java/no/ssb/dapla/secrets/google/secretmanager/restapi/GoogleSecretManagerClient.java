@@ -2,6 +2,7 @@ package no.ssb.dapla.secrets.google.secretmanager.restapi;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.auth.oauth2.AccessToken;
 import com.google.auth.oauth2.ComputeEngineCredentials;
@@ -127,9 +128,10 @@ public class GoogleSecretManagerClient implements SecretManagerClient {
             } else if (checkSecretResponse.statusCode() == 404) {
                 ObjectNode secret = mapper.createObjectNode();
                 ObjectNode replication = secret.putObject("replication");
-                ObjectNode automatic = replication.putObject("automatic");
-                ObjectNode customerManagedEncryption = automatic.putObject("customerManagedEncryption");
-                customerManagedEncryption.put("kmsKeyName", "global");
+                ObjectNode userManaged = replication.putObject("userManaged");
+                ArrayNode arrayNode = userManaged.putArray("replicas");
+                ObjectNode replica = arrayNode.addObject();
+                replica.put("location", "europe-north1");
 
                 String accessToken = String.format("Bearer %s", this.accessToken.getTokenValue());
                 URI uri = URI.create(String.format("https://secretmanager.googleapis.com/v1/projects/%s/secrets?secretId=%s",
@@ -175,8 +177,9 @@ public class GoogleSecretManagerClient implements SecretManagerClient {
                 }
 
                 JsonNode responseSecretVersion = mapper.readTree(response.body());
-                String version = responseSecretVersion.get("name").textValue();
-                return version;
+                String versionUrl = responseSecretVersion.get("name").textValue();
+                String[] versionPathElements = versionUrl.split("/");
+                return versionPathElements[versionPathElements.length - 1];
             }
         } catch (InterruptedException | IOException e) {
             throw new RuntimeException(e);
