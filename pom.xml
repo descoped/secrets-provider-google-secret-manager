@@ -4,7 +4,7 @@
 
     <groupId>no.ssb.dapla.secrets</groupId>
     <artifactId>dapla-secrets-provider-google-secret-manager</artifactId>
-    <version>0.4.0-SNAPSHOT</version>
+    <version>0.4.0</version>
     <packaging>jar</packaging>
 
     <name>Dapla Secrets Provider Google Secret Manager</name>
@@ -40,7 +40,7 @@
         <developerConnection>scm:git:git@github.com:statisticsnorway/dapla-secrets-provider-google-secret-manager.git
         </developerConnection>
         <url>https://github.com/statisticsnorway/dapla-secrets-provider-google-secret-manager/tree/master</url>
-        <tag>HEAD</tag>
+        <tag>dapla-secrets-provider-google-secret-manager-0.4.0</tag>
     </scm>
 
     <dependencies>
