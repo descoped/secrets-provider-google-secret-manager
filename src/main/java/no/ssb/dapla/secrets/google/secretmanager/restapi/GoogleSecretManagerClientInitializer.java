@@ -18,14 +18,14 @@ public class GoogleSecretManagerClientInitializer implements SecretManagerClient
     @Override
     public Set<String> configurationKeys() {
         return Set.of(
-                "secrets.projectId"
+                "secrets.project-id"
         );
     }
 
     @Override
     public SecretManagerClient initialize(Map<String, String> map) {
-        String projectId = map.get("secrets.projectId");
-        String serviceAccountKeyPath = map.get("secrets.serviceAccountKeyPath");
+        String projectId = map.get("secrets.project-id");
+        String serviceAccountKeyPath = map.get("secrets.service-account-key-path");
         return serviceAccountKeyPath == null ? new GoogleSecretManagerClient(projectId) : new GoogleSecretManagerClient(projectId, serviceAccountKeyPath);
     }
 }

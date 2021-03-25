@@ -25,8 +25,8 @@ public class GoogleSecretManagerRestApiTest {
 
         Map<String, String> providerConfiguration = Map.of(
                 "secrets.provider", "google-secret-manager",
-                "secrets.projectId", "ssb-team-dapla",
-                "secrets.serviceAccountKeyPath", getServiceAccountFile(configuration)
+                "secrets.project-id", "ssb-team-dapla",
+                "secrets.service-account-key-path", getServiceAccountFile(configuration)
         );
 
         try (GoogleSecretManagerClient client = (GoogleSecretManagerClient) SecretManagerClient.create(providerConfiguration)) {
@@ -52,8 +52,8 @@ public class GoogleSecretManagerRestApiTest {
 
         Map<String, String> providerConfiguration = Map.of(
                 "secrets.provider", "google-secret-manager",
-                "secrets.projectId", "ssb-team-dapla",
-                "secrets.serviceAccountKeyPath", getServiceAccountFile(configuration)
+                "secrets.project-id", "ssb-team-dapla",
+                "secrets.service-account-key-path", getServiceAccountFile(configuration)
         );
 
         try (SecretManagerClient client = SecretManagerClient.create(providerConfiguration)) {
