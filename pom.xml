@@ -9,7 +9,7 @@
 
     <name>Dapla Secrets Provider Google Secret Manager</name>
     <description>Dapla Secrets Provider Google Secret Manager</description>
-    <url>https://github.com/statisticsnorway/</url>
+    <url>https://github.com/descoped/</url>
     <inceptionYear>2020</inceptionYear>
 
     <properties>
@@ -29,17 +29,15 @@
         <developer>
             <name>Ove Ranheim</name>
             <email>ove.ranheim@gmail.com</email>
-            <url>https://www.linkedin.com/in/oranheim/</url>
-            <organization>Capra Consulting AS</organization>
-            <organizationUrl>https://www.capraconsulting.no/</organizationUrl>
+            <url>https://www.linkedin.com/in/overanheim/</url>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/statisticsnorway/dapla-secrets-provider-google-secret-manager.git</connection>
-        <developerConnection>scm:git:git@github.com:statisticsnorway/dapla-secrets-provider-google-secret-manager.git
+        <connection>scm:git:git://github.com/descoped/dapla-secrets-provider-google-secret-manager.git</connection>
+        <developerConnection>scm:git:git@github.com:descoped/dapla-secrets-provider-google-secret-manager.git
         </developerConnection>
-        <url>https://github.com/statisticsnorway/dapla-secrets-provider-google-secret-manager/tree/master</url>
+        <url>https://github.com/descoped/dapla-secrets-provider-google-secret-manager/tree/master</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -47,13 +45,13 @@
         <dependency>
             <groupId>no.ssb.dapla.secrets</groupId>
             <artifactId>dapla-secrets-client-api</artifactId>
-            <version>0.5.0</version>
+            <version>0.6.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.auth</groupId>
             <artifactId>google-auth-library-oauth2-http</artifactId>
-            <version>0.17.2</version>
+            <version>1.27.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.google.code.findbugs</groupId>
@@ -71,20 +69,20 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.10.2</version>
+            <version>2.17.2</version>
         </dependency>
 
         <dependency>
             <groupId>no.ssb.config</groupId>
             <artifactId>dynamic-configuration</artifactId>
-            <version>0.4</version>
+            <version>0.5-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.6.0</version>
+            <version>5.11.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -102,12 +100,12 @@
                     <plugin>
                         <groupId>org.sonarsource.scanner.maven</groupId>
                         <artifactId>sonar-maven-plugin</artifactId>
-                        <version>3.7.0.1746</version>
+                        <version>4.0.0.4121</version>
                     </plugin>
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.8.6</version>
+                        <version>0.8.12</version>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>
@@ -126,72 +124,13 @@
                 </plugins>
             </build>
         </profile>
-
-        <profile>
-            <id>ssb-bip</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>3.0.1</version>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.1.0</version>
-                        <configuration>
-                            <encoding>UTF-8</encoding>
-                            <additionalOptions>-Xdoclint:none</additionalOptions>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <repositories>
-                <repository>
-                    <id>ssb-bip-releases</id>
-                    <url>https://nexus.prod-bip-ci.ssb.no/repository/maven-public/</url>
-                    <snapshots>
-                        <enabled>true</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
-            <distributionManagement>
-                <repository>
-                    <id>ssb-bip-releases</id>
-                    <name>SSB Nexus Releases</name>
-                    <url>https://nexus.prod-bip-ci.ssb.no/repository/maven-releases/</url>
-                </repository>
-                <snapshotRepository>
-                    <id>ssb-bip-snapshots</id>
-                    <name>SSB Snapshot Repository</name>
-                    <url>https://nexus.prod-bip-ci.ssb.no/repository/maven-snapshots/</url>
-                </snapshotRepository>
-            </distributionManagement>
-        </profile>
     </profiles>
 
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.13.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -205,25 +144,46 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.3.1</version>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.4.2</version>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
+                <version>3.5.0</version>
                 <configuration>
                     <argLine>
                         --illegal-access=deny
                         -Xmx1500m
                     </argLine>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>[3.6.3,4)</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
