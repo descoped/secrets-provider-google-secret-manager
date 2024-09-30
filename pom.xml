@@ -2,19 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>no.ssb.dapla.secrets</groupId>
-    <artifactId>dapla-secrets-provider-google-secret-manager</artifactId>
-    <version>0.4.1-SNAPSHOT</version>
+    <groupId>no.ssb.secrets</groupId>
+    <artifactId>secrets-provider-google-secret-manager</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Dapla Secrets Provider Google Secret Manager</name>
-    <description>Dapla Secrets Provider Google Secret Manager</description>
+    <name>Secrets Provider Google Secret Manager</name>
+    <description>Secrets Provider Google Secret Manager</description>
     <url>https://github.com/descoped/</url>
     <inceptionYear>2020</inceptionYear>
 
     <properties>
         <java.version>11</java.version>
-        <module.build.sourceEncoding>UTF-8</module.build.sourceEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.javadoc.skip>true</maven.javadoc.skip>
     </properties>
 
@@ -34,18 +35,18 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/descoped/dapla-secrets-provider-google-secret-manager.git</connection>
-        <developerConnection>scm:git:git@github.com:descoped/dapla-secrets-provider-google-secret-manager.git
+        <connection>scm:git:git://github.com/descoped/secrets-provider-google-secret-manager.git</connection>
+        <developerConnection>scm:git:git@github.com:descoped/secrets-provider-google-secret-manager.git
         </developerConnection>
-        <url>https://github.com/descoped/dapla-secrets-provider-google-secret-manager/tree/master</url>
+        <url>https://github.com/descoped/secrets-provider-google-secret-manager/tree/master</url>
         <tag>HEAD</tag>
     </scm>
 
     <dependencies>
         <dependency>
-            <groupId>no.ssb.dapla.secrets</groupId>
-            <artifactId>dapla-secrets-client-api</artifactId>
-            <version>0.6.0-SNAPSHOT</version>
+            <groupId>no.ssb.secrets</groupId>
+            <artifactId>secrets-client-api</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -73,9 +74,9 @@
         </dependency>
 
         <dependency>
-            <groupId>no.ssb.config</groupId>
+            <groupId>io.descoped.config</groupId>
             <artifactId>dynamic-configuration</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>2.0.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -89,19 +90,106 @@
 
     <profiles>
         <profile>
-            <id>coverage</id>
-            <properties>
-                <sonar.coverage.jacoco.xmlReportPaths>
-                    target/site/jacoco/jacoco.xml
-                </sonar.coverage.jacoco.xmlReportPaths>
-            </properties>
+            <id>oss-sonatype</id>
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.sonarsource.scanner.maven</groupId>
-                        <artifactId>sonar-maven-plugin</artifactId>
-                        <version>4.0.0.4121</version>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <configuration>
+                            <tagNameFormat>@{project.version}</tagNameFormat>
+                            <goals>deploy</goals>
+                        </configuration>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>oss-maven-central</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.3.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.10.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.7.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>3.1.1</version>
+                        <configuration>
+                            <tagNameFormat>@{project.version}</tagNameFormat>
+                            <autoVersionSubmodules>true</autoVersionSubmodules>
+                            <useReleaseProfile>false</useReleaseProfile>
+                            <releaseProfiles>release</releaseProfiles>
+                            <goals>deploy</goals>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.7</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>coverage</id>
+            <build>
+                <plugins>
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
@@ -115,8 +203,41 @@
                             </execution>
                             <execution>
                                 <id>report</id>
+                                <phase>prepare-package</phase>
                                 <goals>
                                     <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>sonar</id>
+            <properties>
+                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+                <sonar.organization>descoped</sonar.organization>
+                <sonar.projectKey>descoped_${project.artifactId}</sonar.projectKey>
+                <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
+                <sonar.coverage.exclusions/>
+                <sonar.coverage.jacoco.xmlReportPaths>
+                    target/site/jacoco/jacoco.xml
+                </sonar.coverage.jacoco.xmlReportPaths>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonarsource.scanner.maven</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
+                        <version>4.0.0.4121</version>
+                        <executions>
+                            <execution>
+                                <id>sonar</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sonar</goal>
                                 </goals>
                             </execution>
                         </executions>
@@ -132,10 +253,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
                     <release>${java.version}</release>
-                    <encoding>${module.build.sourceEncoding}</encoding>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                     <meminitial>64m</meminitial>
                     <maxmem>512m</maxmem>
                 </configuration>
@@ -145,6 +264,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.3.1</version>
+                <configuration>
+                    <encoding>${project.reporting.outputEncoding}</encoding>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -157,33 +279,22 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.0</version>
-                <configuration>
-                    <argLine>
-                        --illegal-access=deny
-                        -Xmx1500m
-                    </argLine>
-                </configuration>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>3.5.0</version>
-                <executions>
-                    <execution>
-                        <id>enforce-maven</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <version>[3.6.3,4)</version>
-                                </requireMavenVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
+                <configuration>
+                    <rules>
+                        <requireJavaVersion>
+                            <version>${java.version}</version>
+                        </requireJavaVersion>
+                        <requireMavenVersion>
+                            <version>[3.6.3,4)</version>
+                        </requireMavenVersion>
+                    </rules>
+                </configuration>
             </plugin>
         </plugins>
     </build>

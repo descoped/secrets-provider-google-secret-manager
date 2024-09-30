@@ -1,7 +1,7 @@
 package no.ssb.dapla.secrets.google.secretmanager.restapi;
 
-import no.ssb.config.DynamicConfiguration;
-import no.ssb.config.StoreBasedDynamicConfiguration;
+import io.descoped.config.DynamicConfiguration;
+import io.descoped.config.StoreBasedDynamicConfiguration;
 import no.ssb.dapla.secrets.api.SecretManagerClient;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

@@ -1,8 +1,8 @@
 package no.ssb.dapla.secrets.google.secretmanager.restapi;
 
+import io.descoped.service.provider.api.ProviderName;
 import no.ssb.dapla.secrets.api.SecretManagerClient;
 import no.ssb.dapla.secrets.api.SecretManagerClientInitializer;
-import no.ssb.service.provider.api.ProviderName;
 
 import java.util.Map;
 import java.util.Set;
