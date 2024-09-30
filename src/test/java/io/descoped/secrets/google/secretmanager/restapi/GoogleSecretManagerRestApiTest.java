@@ -1,8 +1,8 @@
-package no.ssb.dapla.secrets.google.secretmanager.restapi;
+package io.descoped.secrets.google.secretmanager.restapi;
 
 import io.descoped.config.DynamicConfiguration;
 import io.descoped.config.StoreBasedDynamicConfiguration;
-import no.ssb.dapla.secrets.api.SecretManagerClient;
+import io.descoped.secrets.api.SecretManagerClient;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +25,7 @@ public class GoogleSecretManagerRestApiTest {
 
         Map<String, String> providerConfiguration = Map.of(
                 "secrets.provider", "google-secret-manager",
-                "secrets.project-id", "ssb-team-dapla",
+                "secrets.project-id", "descoped-team",
                 "secrets.service-account-key-path", getServiceAccountFile(configuration)
         );
 
@@ -52,7 +52,7 @@ public class GoogleSecretManagerRestApiTest {
 
         Map<String, String> providerConfiguration = Map.of(
                 "secrets.provider", "google-secret-manager",
-                "secrets.project-id", "ssb-team-dapla",
+                "secrets.project-id", "descoped-team",
                 "secrets.service-account-key-path", getServiceAccountFile(configuration)
         );
 

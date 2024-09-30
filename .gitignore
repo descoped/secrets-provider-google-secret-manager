@@ -34,4 +34,4 @@ dependency-reduced-pom.xml
 
 **/application-override.properties
 
-/dapla-secret-manager-*
+/secret-manager-*

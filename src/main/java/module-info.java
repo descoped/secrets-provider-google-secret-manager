@@ -1,4 +1,4 @@
-import no.ssb.dapla.secrets.api.SecretManagerClientInitializer;
+import io.descoped.secrets.api.SecretManagerClientInitializer;
 
 module secrets.provider.google.rest.api {
 
@@ -11,9 +11,9 @@ module secrets.provider.google.rest.api {
     requires com.google.auth.oauth2;
     requires com.fasterxml.jackson.databind;
 
-    opens no.ssb.dapla.secrets.google.secretmanager.restapi to com.fasterxml.jackson.databind;
+    opens io.descoped.secrets.google.secretmanager.restapi to com.fasterxml.jackson.databind;
 
-    provides SecretManagerClientInitializer with no.ssb.dapla.secrets.google.secretmanager.restapi.GoogleSecretManagerClientInitializer;
+    provides SecretManagerClientInitializer with io.descoped.secrets.google.secretmanager.restapi.GoogleSecretManagerClientInitializer;
 
-    exports no.ssb.dapla.secrets.google.secretmanager.restapi;
+    exports io.descoped.secrets.google.secretmanager.restapi;
 }

@@ -1,4 +1,4 @@
-package no.ssb.dapla.secrets.google.secretmanager.restapi;
+package io.descoped.secrets.google.secretmanager.restapi;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,7 +8,7 @@ import com.google.auth.oauth2.AccessToken;
 import com.google.auth.oauth2.ComputeEngineCredentials;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
-import no.ssb.dapla.secrets.api.SecretManagerClient;
+import io.descoped.secrets.api.SecretManagerClient;
 
 import java.io.IOException;
 import java.net.URI;
